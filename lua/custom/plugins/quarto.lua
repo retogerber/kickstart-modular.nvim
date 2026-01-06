@@ -30,6 +30,8 @@ return {
           never_run = { 'yaml' }, -- filetypes which are never sent to a code runner
         },
       }
+      local quarto = require 'quarto'
+      vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, { silent = true, noremap = true, desc = 'QuartoPreview' })
     end,
   },
 }

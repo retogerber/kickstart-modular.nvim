@@ -67,5 +67,22 @@ mkdir -p /home/$USER/.local/quarto
 cd /home/$USER/.local/quarto
 wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-linux-amd64.tar.gz
 tar -xvzf quarto-1.8.26-linux-amd64.tar.gz
-ln -s /home/$USER/.local/quarto/quarto-1.8.26/bin/quarto ~/.local/bin/quarto
+ln -s /home/$USER/.local/quarto/quarto-1.8.26/bin/quarto /home/$USER/.local/bin/quarto
 
+# kitty
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+ln -s /home/$USER/.local/kitty.app/bin/kitty /home/$USER/.local/bin/kitty
+
+# nerdfonts
+mkdir -p /home/$USER/.local/share/fonts
+cd /home/$USER/.local/share/fonts
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d /home/$USER/.local/share/fonts/JetBrainsMono
+fc-cache -fv
+
+# yazi
+mkdir -p /home/$USER/.local/yazi
+cd /home/$USER/.local/yazi
+wget https://github.com/sxyazi/yazi/releases/download/v26.1.4/yazi-x86_64-unknown-linux-gnu.zip
+unzip yazi-x86_64-unknown-linux-gnu.zip
+ln -s /home/$USER/.local/yazi/yazi-x86_64-unknown-linux-gnu/yazi /home/$USER/.local/bin/yazi
