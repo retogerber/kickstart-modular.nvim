@@ -9,6 +9,12 @@ echo add 'export PATH=$PATH:/home/$USER/.local/bin' to .bashrc
 
 cd /home/$USER/.local
 
+# install gah
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/get-gah/gah/refs/heads/master/tools/install.sh)"
+
+# lazygit 
+gah install lazygit
+
 # neovim
 mkdir -p nvim
 cd nvim

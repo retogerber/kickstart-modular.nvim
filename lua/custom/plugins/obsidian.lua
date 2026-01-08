@@ -18,7 +18,7 @@ return {
         date_format = '%Y/%m/%Y_%m_%d',
         alias_format = '%dth %B %Y',
         default_tags = { 'type/daily-notes' },
-        template = 'templates/Daily_template.md',
+        template = '~/.config/nvim/obsidian_test/templates/Daily_template.md',
         workdays_only = true,
       },
       templates = {
