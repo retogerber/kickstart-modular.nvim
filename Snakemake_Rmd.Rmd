@@ -1,0 +1,66 @@
+---title:"Visualize results 1"
+author:"Reto Gerber"
+date:"`r Sys.Date()`"
+output:html_document:self_contained:TRUE
+code_folding:"hide"
+toc:true
+toc_float:true
+toc_collapsed:true
+toc_depth:3
+number_sections:true
+theme:lumen
+editor_options:chunk_output_type:inline
+params:files:"data/evaluation/metrics_aggregated.csv"
+---``
+`{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, dpi = 45, dev = "png")
+all_times <- list() # store the time for each chunk
+knitr::knit_hooks$set(time_it = local({
+  now <- NULL
+  function(before, options) {
+    if (before) {
+      now <<- Sys.time()
+    } else {
+      res <- difftime(Sys.time(), now)
+      all_times[[options$label]] <<- round(lubridate::as.duration(res))
+    }
+  }
+}))
+knitr::opts_chunk$set(time_it = TRUE)
+`
+``
+
+``
+`{r load_packages, warning=FALSE, message=FALSE}
+suppressPackageStartupMessages(suppressWarnings({
+  library(ggplot2)
+}))
+n_workers <- 16
+RhpcBLASctl::blas_set_num_threads(n_workers)
+`
+``
+
+``
+`{r}
+if (interactive()) {
+  files <- c("data/evaluation/mean/simulation_small/metrics_lrpr50_0.csv", "data/evaluation/sum/simulation_small/metrics_lrpr50_0.csv")
+} else {
+  files <- params$files
+}
+`
+``
+
+
+# Session Info
+
+``
+`{r sessioninfo}
+cat(paste0("Total Run time: ", purrr::reduce(all_times, ` +
+	`)))
+
+print("Run times of chunks:")
+print(all_times)
+
+sessionInfo()
+`
+``

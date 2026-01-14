@@ -99,3 +99,17 @@ gah install sxyazi/yazi
 #wget https://github.com/sxyazi/yazi/releases/download/v26.1.4/yazi-x86_64-unknown-linux-gnu.zip
 #unzip yazi-x86_64-unknown-linux-gnu.zip
 #ln -s /home/$USER/.local/yazi/yazi-x86_64-unknown-linux-gnu/yazi /home/$USER/.local/bin/yazi
+#
+# copy the following to .bashrc:
+#function y() {
+#	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+#	command yazi "$@" --cwd-file="$tmp"
+#	IFS= read -r -d '' cwd < "$tmp"
+#	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+#	rm -f -- "$tmp"
+#}
+
+# duckdb
+curl https://install.duckdb.org | sh
+# yazi piper
+ya pkg add yazi-rs/plugins:piper

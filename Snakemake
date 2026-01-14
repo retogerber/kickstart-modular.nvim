@@ -1,0 +1,91 @@
+from pathlib import Path
+import os
+PYTHON_VERSION="3.12"
+
+workdir: "."
+include: "Snakefile_2"
+
+rule all:
+    input:
+        out_pdf="code/manuscript/manuscript.pdf",
+
+
+rule R_rule:
+    resources:
+        mem_mb=50000,
+    input:
+        local_script="code/evaluation/visualize_results_3.Rmd",
+        df_input="data/input/bla.csv",
+    output:
+        tmpfile="data/evaluation/visualize_results_3_report.html.tmp",
+        report="data/evaluation/visualize_results_3_report.html",
+    shell:
+        """
+        arr=({input.df_input})
+        tmpfile="{output.tmpfile}"
+        echo "${{arr[@]}}" > $tmpfile
+        R --no-save -e '''
+            getwd();
+            files <- readLines("{output.tmpfile}")[1];
+            files <- strsplit(files, " ")[[1]];
+            rmarkdown::render(
+              input = "{input.local_script}",
+              output_file = "{output.report}",
+              knit_root_dir = getwd(),
+              output_dir = file.path(getwd(),"data/evaluation"),
+              output_options = list(self_contained = TRUE),
+              params = list(
+                files = files
+              )
+            )
+            '''
+        """
+
+rule qmd_rule:
+    resources:
+        mem_mb=50000,
+    input:
+        local_script="code/evaluation/visualize_results_3.Rmd",
+        df_input="data/input/bla.csv",
+	df_input_2="data/input/bla2.csv",
+    output:
+        tmpfile="data/evaluation/visualize_results_3_report.html.tmp",
+        report="data/evaluation/visualize_results_3_report.html",
+    shell:
+        """
+        arr=({input.df_input})
+        tmpfile="{output.tmpfile}"
+        echo "${{arr[@]}}" > $tmpfile
+        quarto render {input.qmd_file} -P files:{output.tmpfile} -P file2:{input.df_input_2}
+        """
+
+
+
+rule py_rule:
+    threads: 1
+    params:
+        parameter_1 = 0.5,
+    input:
+        local_script = "code/evaluation/evaluate_predictions_3DIMC.py",
+        config_script = "code/evaluation/evaluate_predictions_config.py",
+        df_input="data/input/bla.csv",
+    output:
+        df_output = "data/output/bla.csv",
+    log: 
+        "logs/py_rule/bla.log",
+    shell:
+        """
+        exec > {log} 2>&1
+        export OMP_NUM_THREADS={threads}
+        export OPENBLAS_NUM_THREADS={threads}
+        export MKL_NUM_THREADS={threads}
+        export VECLIB_MAXIMUM_THREADS={threads}
+        export NUMEXPR_NUM_THREADS={threads}
+        export BLIS_NUM_THREADS={threads}
+        export POLARS_MAX_THREADS={threads}
+        if [ ! -f {input.local_script}.lock ]; then
+            uv lock --python {PYTHON_VERSION} --script {input.local_script}
+        fi
+        MKL_NUM_THREADS={threads} NUMEXPR_NUM_THREADS={threads} OMP_NUM_THREADS={threads} OPENBLAS_NUM_THREADS={threads} BLIS_NUM_THREADS={threads} uv run --python {PYTHON_VERSION} {input.local_script} --input_df_input {input.df_input} --output_df_output {output.df_output} --params_parameter_1 {params.parameter_1}
+        """
+
