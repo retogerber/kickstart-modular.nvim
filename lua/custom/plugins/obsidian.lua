@@ -27,6 +27,9 @@ return {
         time_format = '%H:%M',
       },
     },
+    vim.keymap.set('n', '<localleader>t', function()
+      vim.api.nvim_put({ os.date '%H:%M' }, 'c', true, true)
+    end, { desc = 'Insert current time' }),
     -- vim.keymap.set('n', '<localleader>on', function()
     --   local api = require 'obsidian.api'
     --   api.new_from_template('id', '/Daily_template.md')

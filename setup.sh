@@ -16,13 +16,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/get-gah/gah/refs/heads/m
 gah install lazygit
 
 # neovim
-gah install neovim/neovim
-#mkdir -p nvim
-#cd nvim
-#wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-#tar -xf nvim-linux-x86_64.tar.gz
-#cd /home/$USER/.local/bin
-#ln -s /home/$USER/.local/nvim/nvim-linux-x86_64/bin/nvim nvim
+#gah install neovim/neovim
+mkdir -p nvim
+cd nvim
+wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+tar -xf nvim-linux-x86_64.tar.gz
+cd /home/$USER/.local/bin
+ln -s /home/$USER/.local/nvim/nvim-linux-x86_64/bin/nvim nvim
+
+# link kickstart config
+cd /home/$USER/.config
+ln -s /home/$USER/software/kickstart-modular.nvim nvim
 
 # ripgrep
 gah install BurntSushi/ripgrep
@@ -46,7 +50,7 @@ gah install sharkdp/fd
 # https://askubuntu.com/a/1486875
 
 # luarocks
-gah install luarocks/luarocks
+gah install luarocks/luarocks  --tag=v3.12.2
 #mkdir -p /home/$USER/.local/luarocks
 #cd /home/$USER/.local/luarocks
 #wget https://luarocks.github.io/luarocks/releases/luarocks-3.12.2-linux-x86_64.zip
@@ -64,14 +68,14 @@ cd /home/$USER/.local/air
 curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh
 
 # treesitter cli
-gah install tree-sitter/tree-sitter
-#mkdir -p /home/$USER/.local/treesitter-cli
-#cd /home/$USER/.local/treesitter-cli
-#wget https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.3/tree-sitter-linux-x64.gz
-#gunzip tree-sitter-linux-x64.gz
-#chmod +x tree-sitter-linux-x64
-#cd /home/$USER/.local/bin
-#ln -s /home/$USER/.local/treesitter-cli/tree-sitter-linux-x64 tree-sitter-cli
+#gah install tree-sitter/tree-sitter
+mkdir -p /home/$USER/.local/treesitter-cli
+cd /home/$USER/.local/treesitter-cli
+wget https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.3/tree-sitter-linux-x64.gz
+gunzip tree-sitter-linux-x64.gz
+chmod +x tree-sitter-linux-x64
+cd /home/$USER/.local/bin
+ln -s /home/$USER/.local/treesitter-cli/tree-sitter-linux-x64 tree-sitter-cli
 
 # quarto
 gah install quarto-dev/quarto-cli
@@ -113,3 +117,7 @@ gah install sxyazi/yazi
 curl https://install.duckdb.org | sh
 # yazi piper
 ya pkg add yazi-rs/plugins:piper
+
+
+# uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
