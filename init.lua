@@ -93,11 +93,20 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
+-- Treat R Markdown files as Quarto
+vim.filetype.add({
+  extension = {
+    Rmd = "quarto",
+    rmd = "quarto",
+  }
+})
+
 -- [[ Setting options ]]
 require 'options'
 
 -- [[ Basic Keymaps ]]
-require 'keymaps'
+-- keymaps are loaded by which-key
+-- require 'keymaps'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 require 'lazy-bootstrap'
@@ -105,5 +114,17 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
+vim.g.clipboard = {
+  name = "xclip-wrapper",
+  copy = {
+    ["+"] = { "xclip-wrapper", "-selection", "clipboard" },
+    ["*"] = { "xclip-wrapper", "-selection", "primary" },
+  },
+  paste = {
+    ["+"] = { "xclip-wrapper", "-selection", "clipboard", "-o" },
+    ["*"] = { "xclip-wrapper", "-selection", "primary", "-o" },
+  },
+  cache_enabled = false,
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

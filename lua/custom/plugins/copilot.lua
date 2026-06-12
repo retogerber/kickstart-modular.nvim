@@ -57,7 +57,7 @@ return {
           trace_lsp_progress = false,
           log_lsp_messages = false,
         },
-        copilot_node_command = 'node', -- Node.js version must be > 22
+        copilot_node_command = '/tachyon/groups/scratch/gturco/gerbreto/misc/.local/nvm/versions/node/v24.13.1/bin/node', -- Node.js version must be > 22
         workspace_folders = {},
         copilot_model = '',
         disable_limit_reached_message = false, -- Set to `true` to suppress completion limit reached popup

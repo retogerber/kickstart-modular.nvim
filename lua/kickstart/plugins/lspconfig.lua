@@ -109,6 +109,9 @@ return {
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
+          --- go to definition built-in
+          map('gd', vim.lsp.buf.definition, '[g]o to [d]efinition')
+
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
           ---@param method vim.lsp.protocol.Method
@@ -163,6 +166,25 @@ return {
         end,
       })
 
+
+      -- Configure hover handler with border
+      local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+      function vim.lsp.util.open_floating_preview(contents, syntax, opts)
+        opts = opts or {}
+        opts.border = 'rounded'
+        opts.max_width = 80
+        opts.max_height = 20
+        return orig_util_open_floating_preview(contents, syntax, opts)
+      end
+
+      -- Wrap signature help specifically
+      local orig_sig_help = vim.lsp.buf.signature_help
+      function vim.lsp.buf.signature_help(options)
+        options = options or {}
+        options.border = 'rounded'
+        return orig_sig_help(options)
+      end
+
       -- Diagnostic Config
       -- See :help vim.diagnostic.Opts
       vim.diagnostic.config {
@@ -208,7 +230,20 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        r_language_server = {},
+        air = {
+          filetypes = { 'r' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+        },
+        r_language_server = {
+          filetypes = { 'r' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+          --filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+          settings = {
+            r = {
+              lsp = {
+                rich_documentation = true,
+              },
+            },
+          },
+        },
         marksman = {},
         ruff = {},
         -- clangd = {},
