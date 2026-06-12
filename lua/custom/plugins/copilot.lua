@@ -3,7 +3,7 @@ return {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
     event = 'InsertEnter',
-    requires = {
+    dependencies = {
       'copilotlsp-nvim/copilot-lsp', -- (optional) for NES functionality
     },
     config = function()
@@ -57,7 +57,13 @@ return {
           trace_lsp_progress = false,
           log_lsp_messages = false,
         },
-        copilot_node_command = '/tachyon/groups/scratch/gturco/gerbreto/misc/.local/nvm/versions/node/v24.13.1/bin/node', -- Node.js version must be > 22
+        -- Use system node if available, otherwise fall back to the known absolute path.
+        -- Node.js version must be > 22.
+        copilot_node_command = (function()
+          local node = vim.fn.exepath 'node'
+          if node ~= '' then return node end
+          return '/tachyon/groups/scratch/gturco/gerbreto/misc/.local/nvm/versions/node/v24.13.1/bin/node'
+        end)(),
         workspace_folders = {},
         copilot_model = '',
         disable_limit_reached_message = false, -- Set to `true` to suppress completion limit reached popup
