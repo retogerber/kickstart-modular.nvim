@@ -12,6 +12,8 @@
 -- Then, because we use the `opts` key (recommended), the configuration runs
 -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
+---@module 'lazy'
+---@type LazySpec
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -22,7 +24,8 @@ return {
         {
           -- delay between pressing a key and opening which-key (milliseconds)
           -- this setting is independent of vim.o.timeoutlen
-          delay = 300,
+          delay = 0,
+          icons = { mappings = vim.g.have_nerd_font },
           -- Document existing key chains
           spec = {
             { '<leader>c', group = '[C]ode/[C]cell/[C]hunk' },
