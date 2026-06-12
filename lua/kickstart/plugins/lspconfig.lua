@@ -159,11 +159,10 @@ return {
       ---@type table<string, vim.lsp.Config>
       local servers = {
         air = {
-          filetypes = { 'r' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+          filetypes = { 'r' },
         },
         r_language_server = {
-          filetypes = { 'r' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
-          --filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+          filetypes = { 'r' },
           settings = {
             r = {
               lsp = {
@@ -173,6 +172,18 @@ return {
           },
         },
         marksman = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'basic', -- or 'strict'
+              },
+            },
+          },
+        },
         ruff = {},
         -- clangd = {},
         -- gopls = {},
@@ -221,7 +232,6 @@ return {
           },
         },
       }
-
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
