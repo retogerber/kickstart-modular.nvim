@@ -3,7 +3,7 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
-<<<<<<< HEAD
+    lazy = false,
     dev = false,
     branch = 'main',
 
@@ -91,40 +91,15 @@ return {
       },
     },
 
-    run = ':TSUpdate',
-    config = function()
-      local ts = require 'nvim-treesitter'
-      ---@diagnostic disable-next-line: missing-fields
-      ts.setup {}
-      ts.install {
-        'r',
-        'python',
-        'markdown',
-        'markdown_inline',
-        'julia',
-        'bash',
-        'yaml',
-        'lua',
-        'vim',
-        'query',
-        'vimdoc',
-        'latex', -- requires tree-sitter-cli (installed automatically via Mason)
-        'html',
-        'css',
-        'dot',
-        'javascript',
-        'mermaid',
-        'norg',
-        'typescript',
-      }
-=======
-    lazy = false,
     build = ':TSUpdate',
-    branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
-      -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      -- ensure parsers are installed
+      local parsers = {
+        'r', 'python', 'markdown', 'markdown_inline', 'julia', 'bash', 'yaml',
+        'lua', 'luadoc', 'vim', 'query', 'vimdoc', 'latex', 'html', 'css',
+        'dot', 'javascript', 'mermaid', 'norg', 'typescript', 'c', 'diff',
+      }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
@@ -170,7 +145,6 @@ return {
           end
         end,
       })
->>>>>>> upstream/master
     end,
   },
 }

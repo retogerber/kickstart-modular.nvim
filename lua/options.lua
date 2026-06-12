@@ -19,14 +19,10 @@ vim.o.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-<<<<<<< HEAD
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
   -- vim.o.clipboard = 'unnamed'
 end)
-=======
-vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
->>>>>>> upstream/master
 
 -- Enable break indent
 vim.o.breakindent = true
