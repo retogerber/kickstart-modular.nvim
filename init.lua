@@ -84,6 +84,7 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+<<<<<<< HEAD
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -101,6 +102,8 @@ vim.filetype.add({
   }
 })
 
+=======
+>>>>>>> upstream/master
 -- [[ Setting options ]]
 require 'options'
 
@@ -108,11 +111,11 @@ require 'options'
 -- keymaps are loaded by which-key
 -- require 'keymaps'
 
--- [[ Install `lazy.nvim` plugin manager ]]
-require 'lazy-bootstrap'
+-- [[ Set up vim.pack ]]
+require 'pack'
 
 -- [[ Configure and install plugins ]]
-require 'lazy-plugins'
+require 'plugins'
 
 vim.g.clipboard = {
   name = "xclip-wrapper",
