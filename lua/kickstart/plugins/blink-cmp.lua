@@ -15,6 +15,13 @@ require('luasnip.loaders.from_vscode').lazy_load()
 
 -- [[ Autocomplete Engine ]]
 vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
+if not pcall(require, 'blink.cmp.fuzzy') then
+  vim.schedule(function()
+    vim.notify('Skipping blink.cmp setup until blink.cmp is updated to v1.x. Run :lua vim.pack.update() and restart Neovim.', vim.log.levels.WARN)
+  end)
+  return
+end
+
 require('blink.cmp').setup {
   keymap = {
     -- 'default' (recommended) for mappings similar to built-in completions
