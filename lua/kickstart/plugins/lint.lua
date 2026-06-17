@@ -1,24 +1,11 @@
 -- Linting
 
-<<<<<<< HEAD
----@module 'lazy'
----@type LazySpec
-return {
-  'mfussenegger/nvim-lint',
-  event = { 'BufReadPre', 'BufNewFile' },
-  config = function()
-    local lint = require 'lint'
-    lint.linters_by_ft = {
-      markdown = { 'markdownlint' }, -- Make sure to install `markdownlint` via mason / npm
-      r = { 'lintr' }, -- Make sure to install lintr: install.packages("lintr")
-    }
-=======
 vim.pack.add { 'https://github.com/mfussenegger/nvim-lint' }
->>>>>>> upstream/master
 
 local lint = require 'lint'
 lint.linters_by_ft = {
   markdown = { 'markdownlint' }, -- Make sure to install `markdownlint` via mason / npm
+  r = { 'lintr' }, -- Make sure to install lintr: install.packages("lintr")
 }
 
 -- To allow other plugins to add linters to require('lint').linters_by_ft,

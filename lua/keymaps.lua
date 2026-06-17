@@ -1,7 +1,6 @@
 local wk = require 'which-key'
 local ms = vim.lsp.protocol.Methods
 
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -59,11 +58,10 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Terminal mode
-vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = 'Move focus to the left window' })
-vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = 'Move focus to the right window' })
-vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = 'Move focus to the lower window' })
-vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = 'Move focus to the upper window' })
-
+vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]], { desc = 'Move focus to the left window' })
+vim.keymap.set('t', '<C-l>', [[<C-\><C-n><C-w>l]], { desc = 'Move focus to the right window' })
+vim.keymap.set('t', '<C-j>', [[<C-\><C-n><C-w>j]], { desc = 'Move focus to the lower window' })
+vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]], { desc = 'Move focus to the upper window' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -83,7 +81,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
-
 ---Is the current context a code chunk?
 ---@param lang string language of the code chunk
 ---@return boolean
@@ -96,7 +93,6 @@ local is_code_chunk = function(lang)
   end
 end
 
-
 --- Insert code chunk of given language
 --- Splits current chunk if already within a chunk
 --- @param lang string
@@ -104,9 +100,7 @@ end
 local insert_a_code_chunk = function(lang, curly)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>', true, false, true), 'n', true)
   local keys
-  if curly == nil then
-    curly = true
-  end
+  if curly == nil then curly = true end
   if is_code_chunk(lang) then
     if curly then
       keys = [[o```<cr><cr>```{]] .. lang .. [[}<esc>o]]
@@ -124,22 +118,13 @@ local insert_a_code_chunk = function(lang, curly)
   vim.api.nvim_feedkeys(keys, 'n', false)
 end
 
-local insert_code_chunk = function(lang)
-  insert_a_code_chunk(lang, true)
-end
+local insert_code_chunk = function(lang) insert_a_code_chunk(lang, true) end
 
-local insert_plain_code_chunk = function(lang)
-  insert_a_code_chunk(lang, false)
-end
+local insert_plain_code_chunk = function(lang) insert_a_code_chunk(lang, false) end
 
-local insert_r_chunk = function()
-  insert_code_chunk 'r'
-end
+local insert_r_chunk = function() insert_code_chunk 'r' end
 
-local insert_py_chunk = function()
-  insert_code_chunk 'python'
-end
-
+local insert_py_chunk = function() insert_code_chunk 'python' end
 
 --
 -- normal mode
@@ -159,8 +144,6 @@ wk.add({
   },
 }, { mode = 'i' })
 
-
-
 wk.add({
   {
     { '<leader>ir', insert_r_chunk, desc = '[r] code chunk' },
@@ -168,28 +151,15 @@ wk.add({
   },
 }, { mode = 'n' })
 
+local function new_terminal(lang) vim.cmd('vsplit term://' .. lang) end
 
+local function new_terminal_python() new_terminal 'python' end
 
-local function new_terminal(lang)
-  vim.cmd('vsplit term://' .. lang)
-end
+local function new_terminal_r() new_terminal 'R --no-save' end
 
-local function new_terminal_python()
-  new_terminal 'python'
-end
+local function new_terminal_ipython() new_terminal 'ipython --no-confirm-exit --no-autoindent' end
 
-local function new_terminal_r()
-  new_terminal 'R --no-save'
-end
-
-local function new_terminal_ipython()
-  new_terminal 'ipython --no-confirm-exit --no-autoindent'
-end
-
-local function new_terminal_shell()
-  new_terminal '$SHELL'
-end
-
+local function new_terminal_shell() new_terminal '$SHELL' end
 
 local function get_otter_symbols_lang()
   local otterkeeper = require 'otter.keeper'
@@ -213,7 +183,6 @@ end
 
 vim.keymap.set('n', '<leader>os', get_otter_symbols_lang, { desc = 'otter [s]ymbols' })
 
-
 wk.add({
   {
     { '<leader>ci', new_terminal_ipython, desc = 'new [i]python terminal' },
@@ -228,15 +197,11 @@ wk.add({
     { '<leader>ld', group = '[d]iagnostics' },
     {
       '<leader>ldd',
-      function()
-        vim.diagnostic.enable(false)
-      end,
+      function() vim.diagnostic.enable(false) end,
       desc = '[d]isable',
     },
     { '<leader>lde', vim.diagnostic.enable, desc = '[e]nable' },
     { '<leader>le', vim.diagnostic.open_float, desc = 'diagnostics (show hover [e]rror)' },
     { '<leader>lg', ':Neogen<cr>', desc = 'neo[g]en docstring' },
-
   },
 }, { mode = 'n' })
-
