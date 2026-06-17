@@ -94,35 +94,37 @@ vim.g.maplocalleader = ','
 vim.g.have_nerd_font = false
 
 -- Treat R Markdown files as Quarto
-vim.filetype.add({
+vim.filetype.add {
   extension = {
-    Rmd = "quarto",
-    rmd = "quarto",
-  }
-})
-
+    Rmd = 'quarto',
+    rmd = 'quarto',
+  },
+}
 -- [[ Setting options ]]
 require 'options'
 
--- [[ Basic Keymaps ]]
--- keymaps are loaded by which-key
--- require 'keymaps'
-
--- [[ Install `lazy.nvim` plugin manager ]]
-require 'lazy-bootstrap'
+-- [[ Set up vim.pack ]]
+require 'pack'
 
 -- [[ Configure and install plugins ]]
+require 'plugins'
+
+-- [[ Basic Keymaps ]]
+require 'keymaps'
+
+-- [[ Configure custom lazy.nvim plugins ]]
+require 'lazy-bootstrap'
 require 'lazy-plugins'
 
 vim.g.clipboard = {
-  name = "xclip-wrapper",
+  name = 'xclip-wrapper',
   copy = {
-    ["+"] = { "xclip-wrapper", "-selection", "clipboard" },
-    ["*"] = { "xclip-wrapper", "-selection", "primary" },
+    ['+'] = { 'xclip-wrapper', '-selection', 'clipboard' },
+    ['*'] = { 'xclip-wrapper', '-selection', 'primary' },
   },
   paste = {
-    ["+"] = { "xclip-wrapper", "-selection", "clipboard", "-o" },
-    ["*"] = { "xclip-wrapper", "-selection", "primary", "-o" },
+    ['+'] = { 'xclip-wrapper', '-selection', 'clipboard', '-o' },
+    ['*'] = { 'xclip-wrapper', '-selection', 'primary', '-o' },
   },
   cache_enabled = false,
 }

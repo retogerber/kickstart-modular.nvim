@@ -67,9 +67,7 @@ return {
         workspace_folders = {},
         copilot_model = '',
         disable_limit_reached_message = false, -- Set to `true` to suppress completion limit reached popup
-        root_dir = function()
-          return vim.fs.dirname(vim.fs.find('.git', { upward = true })[1])
-        end,
+        root_dir = function() return vim.fs.dirname(vim.fs.find('.git', { upward = true })[1]) end,
         should_attach = function(_, _)
           if not vim.bo.buflisted then
             vim.notify("not attaching, buffer is not 'buflisted'", vim.log.levels.DEBUG)

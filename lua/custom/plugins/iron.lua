@@ -32,17 +32,17 @@ return {
             R = {
               -- Can be a table or a function that
               -- returns a table (see below)
-              command = {"R", "--no-save", "--quiet"},
+              command = { 'R', '--no-save', '--quiet' },
             },
             r = {
               -- Can be a table or a function that
               -- returns a table (see below)
-              command = {"R", "--no-save", "--quiet"},
+              command = { 'R', '--no-save', '--quiet' },
             },
-	    python = {
-	       command = {"python"},
-	       format = require("iron.fts.common").bracketed_paste,
-	    },
+            python = {
+              command = { 'python' },
+              format = require('iron.fts.common').bracketed_paste,
+            },
             -- Rmd = {
             --   command = {"R", "--no-save", "--quiet"},
             --   block_dividers = {
@@ -113,62 +113,61 @@ return {
       -- end, { desc = 'Execute code block + jump to next ```' })
       local function get_ft()
         local ft = vim.bo.filetype
-        if ft == "quarto" then
-	  local keeper = require("otter.keeper")
+        if ft == 'quarto' then
+          local keeper = require 'otter.keeper'
           return keeper.get_current_language_context()
-	else
-	  return ft
-	end
+        else
+          return ft
+        end
       end
 
       local function send_selection()
-	local data = iron.mark_visual()
-	local lang = get_ft()
-	iron.send(lang, data)
+        local data = iron.mark_visual()
+        local lang = get_ft()
+        iron.send(lang, data)
       end
 
       local function send_line()
-	local lang = get_ft()
+        local lang = get_ft()
         local linenr = vim.api.nvim_win_get_cursor(0)[1] - 1
         local cur_line = vim.api.nvim_buf_get_lines(0, linenr, linenr + 1, 0)[1]
         local width = vim.fn.strwidth(cur_line)
         if width == 0 then return end
-	iron.send(lang, cur_line)
+        iron.send(lang, cur_line)
       end
 
       local function focus_repl()
-	local lang = get_ft()
-	if lang == "iron" then
-	  return
-	else
-	  return iron.focus_on(lang)
-	end
+        local lang = get_ft()
+        if lang == 'iron' then
+          return
+        else
+          return iron.focus_on(lang)
+        end
       end
 
       local function hide_repl()
-	local lang = get_ft()
-	if lang == "iron" then
-	  return
-	else
-	  return iron.hide_repl(lang)
-	end
+        local lang = get_ft()
+        if lang == 'iron' then
+          return
+        else
+          return iron.hide_repl(lang)
+        end
       end
 
       local function toggle_repl()
-	local lang = get_ft()
-	if lang == "iron" then
-	  return
-	else
-	  return iron.repl_for(lang)
-	end
+        local lang = get_ft()
+        if lang == 'iron' then
+          return
+        else
+          return iron.repl_for(lang)
+        end
       end
 
-      vim.keymap.set("v", "<leader>r", send_selection, { desc = "run selection", silent = true })
-      vim.keymap.set("n", "<leader>rl", send_line, { desc = "run line", silent = true })
-      vim.keymap.set("n", "<leader>rf", focus_repl, { desc = "focus REPL", silent = true })
-      vim.keymap.set("n", "<leader>rh", hide_repl, { desc = "hide REPL", silent = true })
-      vim.keymap.set("n", "<leader>rt", toggle_repl, { desc = "toggle REPL", silent = true })
-
+      vim.keymap.set('v', '<leader>r', send_selection, { desc = 'run selection', silent = true })
+      vim.keymap.set('n', '<leader>rl', send_line, { desc = 'run line', silent = true })
+      vim.keymap.set('n', '<leader>rf', focus_repl, { desc = 'focus REPL', silent = true })
+      vim.keymap.set('n', '<leader>rh', hide_repl, { desc = 'hide REPL', silent = true })
+      vim.keymap.set('n', '<leader>rt', toggle_repl, { desc = 'toggle REPL', silent = true })
     end,
   },
 }
