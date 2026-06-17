@@ -58,7 +58,8 @@ require('copilot').setup {
   copilot_node_command = (function()
     local node = vim.fn.exepath 'node'
     if node ~= '' then return node end
-    return '/tachyon/groups/scratch/gturco/gerbreto/misc/.local/nvm/versions/node/v24.13.1/bin/node'
+    vim.schedule(function() vim.notify('copilot.lua requires Node.js >= 22 available in PATH.', vim.log.levels.WARN) end)
+    return 'node'
   end)(),
   workspace_folders = {},
   copilot_model = '',
