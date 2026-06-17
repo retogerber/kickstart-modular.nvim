@@ -4,7 +4,7 @@ local function gh(repo) return 'https://github.com/' .. repo end
 --
 -- See `:help gitsigns` to understand what each configuration key does.
 -- Adds git related signs to the gutter, as well as utilities for managing changes
-vim.pack.add { gh 'lewis6991/gitsigns.nvim' }
+vim.pack.add { { src = gh 'lewis6991/gitsigns.nvim', version = vim.version.range '2.*' } }
 require('gitsigns').setup {
   signs = {
     add = { text = '+' }, ---@diagnostic disable-line: missing-fields
