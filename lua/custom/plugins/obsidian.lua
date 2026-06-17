@@ -27,12 +27,15 @@ return {
         time_format = '%H:%M',
       },
     },
-    vim.keymap.set('n', '<localleader>it', function()
-      vim.api.nvim_put({ os.date '%H:%M' }, 'c', true, true)
-    end, { desc = '[I]nsert current [t]ime' }),
-    -- vim.keymap.set('n', '<localleader>on', function()
-    --   local api = require 'obsidian.api'
-    --   api.new_from_template('id', '/Daily_template.md')
-    -- end, { desc = 'Execute code block + jump to next ```' }),
+    config = function(_, opts)
+      require('obsidian').setup(opts)
+      vim.keymap.set('n', '<localleader>it', function()
+        vim.api.nvim_put({ os.date '%H:%M' }, 'c', true, true)
+      end, { desc = '[I]nsert current [t]ime' })
+      -- vim.keymap.set('n', '<localleader>on', function()
+      --   local api = require 'obsidian.api'
+      --   api.new_from_template('id', '/Daily_template.md')
+      -- end, { desc = 'Execute code block + jump to next ```' })
+    end,
   },
 }
