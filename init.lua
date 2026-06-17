@@ -112,10 +112,6 @@ require 'plugins'
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 
--- [[ Configure custom lazy.nvim plugins ]]
-require 'lazy-bootstrap'
-require 'lazy-plugins'
-
 vim.g.clipboard = {
   name = 'xclip-wrapper',
   copy = {

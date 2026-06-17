@@ -1,28 +1,20 @@
-return {
-  {
-    'MeanderingProgrammer/render-markdown.nvim',
-    ft = { 'markdown', 'quarto' },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
-    opts = {
-      file_types = { 'markdown', 'quarto' },
-      -- Render headings, code blocks, tables, etc. in normal mode only.
-      -- Disable if you prefer raw markdown.
-      enabled = true,
-      -- Code block rendering: show language icon and a subtle background
-      code = {
-        enabled = true,
-        sign = false,
-        style = 'full',
-      },
-      -- Heading rendering with distinct width per level
-      heading = {
-        enabled = true,
-        sign = false,
-      },
-      -- Checkbox rendering for task lists
-      checkbox = { enabled = true },
-    },
+local function gh(repo) return 'https://github.com/' .. repo end
+
+vim.pack.add { gh 'MeanderingProgrammer/render-markdown.nvim' }
+
+require('render-markdown').setup {
+  file_types = { 'markdown', 'quarto' },
+  enabled = true,
+  code = {
+    enabled = true,
+    sign = false,
+    style = 'full',
   },
+  heading = {
+    enabled = true,
+    sign = false,
+  },
+  checkbox = { enabled = true },
 }
+
+-- vim: ts=2 sts=2 sw=2 et
