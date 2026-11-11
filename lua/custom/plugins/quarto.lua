@@ -5,6 +5,19 @@ vim.pack.add {
   gh 'jmbuhr/otter.nvim',
 }
 
+require('otter').setup {
+  lsp = {
+    -- Diagnostics are synchronized only when the .qmd file is written.
+    diagnostic_update_events = { 'BufWritePost' },
+  },
+  buffers = {
+    -- Required for normal LSP attachment to injected R buffers.
+    set_filetype = true,
+    write_to_disk = false,
+  },
+  handle_leading_whitespace = true,
+}
+
 require('quarto').setup {
   debug = false,
   closePreviewOnExit = true,

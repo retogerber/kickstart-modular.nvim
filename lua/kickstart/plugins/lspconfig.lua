@@ -136,11 +136,14 @@ end
 --  See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
 local servers = {
-  air = {
-    filetypes = { 'r' },
-  },
+  -- air = {
+  --   filetypes = { 'r' },
+  -- },
   r_language_server = {
     filetypes = { 'r' },
+    flags = {
+      debounce_text_changes = 300, -- Wait 300ms after typing stops before sending didChange
+    },
     settings = {
       r = {
         lsp = {

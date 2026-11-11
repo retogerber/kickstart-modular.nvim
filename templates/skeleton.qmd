@@ -1,0 +1,75 @@
+---
+title: "{{title}}"
+author: "Reto Gerber"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    theme: lumen
+    toc: true
+    toc-location: left
+    number-sections: true
+    self-contained: true
+    code-fold: true 
+    code-overflow: wrap
+    page-layout: full
+    grid:
+      sidebar-width: 450px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+editor-options: 
+    chunk-output-type: console
+params:
+    threads: "1"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, dpi = 90, dev = "png", out.width = "100%")
+options(width = 100)
+all_times <- list() # store the time for each chunk
+knitr::knit_hooks$set(time_it = local({
+  now <- NULL
+  function(before, options) {
+    if (before) {
+      now <<- Sys.time()
+    } else {
+      res <- difftime(Sys.time(), now)
+      all_times[[options$label]] <<- round(lubridate::as.duration(res))
+    }
+  }
+}))
+knitr::opts_chunk$set(time_it = TRUE)
+```
+
+# Load packages
+
+```{r load-pkg}
+suppressPackageStartupMessages({
+    library(ggplot2)
+})
+
+if (interactive()) {
+  n_workers <- 16
+} else {
+  n_workers <- as.integer(params$threads)
+}
+RhpcBLASctl::blas_set_num_threads(n_workers)
+set.seed(123)
+```
+
+
+
+
+
+# Session info
+
+```{r session-info}
+print("Run times of chunks:")
+chunktimedf <- rbind(
+  tibble::tibble(chunk="Total", time=purrr::reduce(all_times, `+`)), 
+  tibble::tibble(chunk=names(all_times), time=lubridate::as.duration(unlist(all_times)))
+)
+print(chunktimedf, n=Inf)
+
+sessionInfo()
+```

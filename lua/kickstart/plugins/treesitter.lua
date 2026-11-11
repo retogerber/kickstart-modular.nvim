@@ -35,7 +35,7 @@ local parsers = {
   'dot',
   'javascript',
   'mermaid',
-  'norg',
+  -- 'norg',
   'typescript',
   'c',
   'diff',

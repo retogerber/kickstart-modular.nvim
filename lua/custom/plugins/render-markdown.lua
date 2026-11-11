@@ -8,7 +8,9 @@ require('render-markdown').setup {
   code = {
     enabled = true,
     sign = false,
-    style = 'full',
+    conceal_delimiters = false,
+    border = 'thick',
+    style = 'language',
   },
   heading = {
     enabled = true,

@@ -21,8 +21,10 @@ gah install lazygit
 #gah install neovim/neovim
 mkdir -p nvim
 cd nvim
-wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-tar -xf nvim-linux-x86_64.tar.gz
+wget https://github.com/neovim/neovim/releases/download/v0.12.3/nvim-linux-x86_64.appimage
+./nvim-linux-arm64.appimage --appimage-extract
+#wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+#tar -xf nvim-linux-x86_64.tar.gz
 cd ${LOCAL_INSTALL_DIR}/bin
 ln -s ${LOCAL_INSTALL_DIR}/nvim/nvim-linux-x86_64/bin/nvim nvim
 
@@ -78,6 +80,10 @@ gunzip tree-sitter-linux-x64.gz
 chmod +x tree-sitter-linux-x64
 cd ${LOCAL_INSTALL_DIR}/bin
 ln -s ${LOCAL_INSTALL_DIR}/treesitter-cli/tree-sitter-linux-x64 tree-sitter-cli
+
+# to fix treesitter:
+# cd /tachyon/groups/scratch/gturco/gerbreto/misc/.local/share/nvim/mason/bin
+# ln -sr /tachyon/groups/scratch/gturco/gerbreto/misc/.cargo/bin/tree-sitter tree-sitter
 
 # quarto
 gah install quarto-dev/quarto-cli

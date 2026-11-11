@@ -10,6 +10,7 @@ require('obsidian').setup {
       path = '~/.config/nvim/obsidian_test',
     },
   },
+  ui = { enable = false },
   daily_notes = {
     folder = '.',
     date_format = '%Y/%m/%Y_%m_%d',

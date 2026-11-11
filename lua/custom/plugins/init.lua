@@ -7,5 +7,6 @@ require 'custom.plugins.render-markdown'
 require 'custom.plugins.snakemake'
 require 'custom.plugins.venv-selector'
 require 'custom.plugins.yazi'
+require 'custom.plugins.templates'
 
 -- vim: ts=2 sts=2 sw=2 et

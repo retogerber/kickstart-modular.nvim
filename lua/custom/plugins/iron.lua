@@ -21,6 +21,7 @@ iron.setup {
       python = {
         command = { 'python' },
         format = require('iron.fts.common').bracketed_paste,
+        env = {PYTHON_BASIC_REPL = "1"}, --this is needed for python3.13 and up.
       },
     },
     repl_open_cmd = require('iron.view').split.vertical.botright '40%',
@@ -34,6 +35,13 @@ iron.setup {
   highlight = false,
   ignore_blank_lines = true,
 }
+-- suppress stale LSP responses from R language server
+vim.lsp.handlers['textDocument/hover'] = function(err, result, ctx, config)
+  if err and err.code == -32800 then
+    return
+  end
+  return vim.lsp.handlers.hover(err, result, ctx, config)
+end
 
 vim.keymap.set('n', '<localleader>rS', '<cmd>IronRepl<cr>', { desc = '[R]EPL [S]tart' })
 vim.keymap.set('n', '<localleader>rR', '<cmd>IronRestart<cr>', { desc = '[R]EPL [R]estart' })
