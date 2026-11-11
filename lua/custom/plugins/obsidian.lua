@@ -1,4 +1,5 @@
 local function gh(repo) return 'https://github.com/' .. repo end
+local workspace = vim.fs.joinpath(vim.fn.stdpath 'config', 'obsidian_test')
 
 vim.pack.add { gh 'obsidian-nvim/obsidian.nvim' }
 
@@ -7,7 +8,7 @@ require('obsidian').setup {
   workspaces = {
     {
       name = 'work',
-      path = '~/.config/nvim/obsidian_test',
+      path = workspace,
     },
   },
   ui = { enable = false },
@@ -16,7 +17,7 @@ require('obsidian').setup {
     date_format = '%Y/%m/%Y_%m_%d',
     alias_format = '%dth %B %Y',
     default_tags = { 'type/daily-notes' },
-    template = '~/.config/nvim/obsidian_test/templates/Daily_template.md',
+    template = vim.fs.joinpath(workspace, 'templates', 'Daily_template.md'),
     workdays_only = true,
   },
   templates = {

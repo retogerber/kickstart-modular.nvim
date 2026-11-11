@@ -127,6 +127,11 @@ That's it! `vim.pack` will install all the plugins from your config. Use
 `:lua vim.pack.update()` to fetch updates (`:write` applies updates, `:quit`
 cancels them).
 
+Plugin modules in `lua/custom/plugins/` are loaded at startup after the core
+plugins. Their loading order is unspecified; require modules explicitly in
+`lua/plugins.lua` instead of using the loader if they depend on a particular
+order.
+
 #### Read The Friendly Documentation
 
 Read through the `init.lua` file in your configuration folder for more

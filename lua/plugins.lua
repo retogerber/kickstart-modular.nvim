@@ -29,14 +29,15 @@ require 'kickstart.plugins.treesitter'
 
 -- NOTE: You can add your own plugins, configuration, etc. in `lua/custom/plugins/*.lua`.
 --
--- For independent modules, uncomment the convenience loader:
--- require 'custom.plugins'
+-- Load the custom plugin modules:
+require 'custom.plugins'
 --
 -- `custom.plugins` automatically loads files from that directory, but their
 -- order is unspecified. If plugins depend on each other, keep them in the same
 -- file and put their `vim.pack.add()` and `setup()` calls in the required order.
 --
--- If separate modules need a specific order, require them explicitly instead:
+-- If separate modules need a specific order, disable the loader above and
+-- require them explicitly instead:
 -- require 'custom.plugins.colorscheme'
 -- require 'custom.plugins.ui'
 -- require 'custom.plugins.git'
