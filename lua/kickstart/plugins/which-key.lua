@@ -8,6 +8,10 @@ require('which-key').setup {
   icons = { mappings = vim.g.have_nerd_font },
   -- Document existing key chains
   spec = {
+    { '<leader>c', group = '[C]ode/[C]ell/[C]hunk' },
+    { '<leader>i', group = '[I]nsert' },
+    { '<leader>r', group = '[R]un' },
+    { '<leader>q', group = '[Q]uarto' },
     { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
     { '<leader>t', group = '[T]oggle' },
     { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first

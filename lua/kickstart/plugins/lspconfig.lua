@@ -59,6 +59,21 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --  For example, in C this would take you to the header.
     map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+    -- Fuzzy find all the symbols in your current document.
+    --  Symbols are things like variables, functions, types, etc.
+    map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+
+    -- Fuzzy find all the symbols in your current workspace.
+    --  Similar to document symbols, except searches over your entire project.
+    map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+
+    -- Jump to the type of the word under your cursor.
+    --  Useful when you're not sure what type a variable is and you want to see
+    --  the definition of its *type*, not where it was *defined*.
+    map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+
+    map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+
     -- The following two autocommands are used to highlight references of the
     -- word under your cursor when your cursor rests there for a little while.
     --    See `:help CursorHold` for information about when this is executed
@@ -98,11 +113,56 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+-- Configure hover handler with border
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts)
+  opts = opts or {}
+  opts.border = 'rounded'
+  opts.max_width = 80
+  opts.max_height = 20
+  return orig_util_open_floating_preview(contents, syntax, opts)
+end
+
+-- Wrap signature help specifically
+local orig_sig_help = vim.lsp.buf.signature_help
+function vim.lsp.buf.signature_help(options)
+  options = options or {}
+  options.border = 'rounded'
+  return orig_sig_help(options)
+end
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --  See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
 local servers = {
+  air = {
+    filetypes = { 'r' },
+  },
+  r_language_server = {
+    filetypes = { 'r' },
+    settings = {
+      r = {
+        lsp = {
+          rich_documentation = true,
+        },
+      },
+    },
+  },
+  marksman = {},
+  pyright = {
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'openFilesOnly',
+          useLibraryCodeForTypes = true,
+          typeCheckingMode = 'basic', -- or 'strict'
+        },
+      },
+    },
+  },
+  ruff = {},
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
