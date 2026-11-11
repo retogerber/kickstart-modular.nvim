@@ -132,6 +132,78 @@ plugins. Their loading order is unspecified; require modules explicitly in
 `lua/plugins.lua` instead of using the loader if they depend on a particular
 order.
 
+### R and Quarto over SSH
+
+R.nvim runs R in a Neovim terminal **on the server**; the local Kitty
+installation is not used as a remote terminal executable. Install R >= 4.1,
+`make`, a C compiler, and the tree-sitter CLI on the server. `vim.pack`
+installs the pinned R.nvim release and its submodules; R.nvim builds
+`nvimcom`, `rnvimserver`, and the `rout` parser when needed. The R, CSV,
+Markdown and YAML parsers are managed by nvim-treesitter. Run `:checkhealth r`
+and `:RDebugInfo` if startup fails. If an `.Rprofile` sets `defaultPackages`,
+it must include `nvimcom` for R.nvim sessions (see `:help nvimcom-not-loaded`).
+
+Open an `.R`, `.qmd`, or `.Rmd` file and use `Space Rs` to start or reopen R,
+`Space Rq` to quit it, and `Space Ro` for the object browser. `Space rl` sends
+the current line and visual `Space r` sends the selection. In a Quarto R
+chunk, `Space rc` sends the current cell, `Space rA` sends all cells of the
+current language, and visual `Space R` sends a range. These all use the same
+R.nvim session; start it first. Python remains on Iron, including its existing
+Python-specific paste formatting and REPL controls. Use `:RMapsDesc` to inspect
+R.nvim's mappings; its default key combinations are disabled to avoid
+colliding with this configuration. R.nvim supplies R completion while the
+existing R language server supplies diagnostics and other LSP features.
+
+For browser-based output, forward loopback ports from the **local** machine
+when connecting (replace the hostname and user):
+
+```sh
+ssh -L 8765:127.0.0.1:8765 -L 8766:127.0.0.1:8766 \
+    -L 4200:127.0.0.1:4200 user@server
+```
+
+In the R console, after installing the R package `httpgd`, start a graphics
+device and generate a plot:
+
+```r
+httpgd::hgd(host = "127.0.0.1", port = 8765)
+plot(mtcars)
+```
+
+Open the **complete URL including its token** printed by httpgd in the local
+browser. The browser provides plot history, zooming and export; the R session
+must remain running. This is not a graphics device for HTML widgets.
+
+For interactive widgets such as plotly or leaflet, install `htmlwidgets`, the
+widget package and Pandoc on the server. Start a static server in a separate
+remote shell:
+
+```sh
+install -d -m 700 "$HOME/.cache/r-nvim-widgets"
+python3 -m http.server 8766 --bind 127.0.0.1 --directory "$HOME/.cache/r-nvim-widgets"
+```
+
+In R, save a widget and open `http://127.0.0.1:8766/widget.html` locally:
+
+```r
+widget <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+htmlwidgets::saveWidget(widget, file.path(Sys.getenv("HOME"), ".cache/r-nvim-widgets/widget.html"), selfcontained = TRUE)
+```
+
+Save again and refresh the browser after changes. Widgets requiring a live R
+backend (for example Shiny) instead need their own server and forwarded port.
+For Quarto preview, `Space qp` starts a loopback-only server on port 4200
+without opening a browser when connected via SSH; open the URL printed in the
+preview terminal on the local machine. Install Quarto and the appropriate R
+packages (for example `knitr`, `rmarkdown`, and `quarto`) for rendering.
+
+These ports are examples: choose unused ports and update the SSH forwarding
+and server commands together (change port 4200 in
+`lua/custom/plugins/quarto.lua` for Quarto). Loopback-only servers are still reachable by
+other users on the same server; httpgd's token protects its viewer, but the
+static widget and Quarto servers have no authentication. Do not serve
+sensitive output on a shared server without additional access controls.
+
 #### Read The Friendly Documentation
 
 Read through the `init.lua` file in your configuration folder for more

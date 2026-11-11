@@ -18,6 +18,7 @@ vim.g.no_plugin_maps = true
 -- Ensure basic parsers are installed
 local parsers = {
   'r',
+  'csv',
   'python',
   'markdown',
   'markdown_inline',
