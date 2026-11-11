@@ -205,3 +205,5 @@ wk.add({
     { '<leader>lg', ':Neogen<cr>', desc = 'neo[g]en docstring' },
   },
 }, { mode = 'n' })
+
+-- vim: ts=2 sts=2 sw=2 et

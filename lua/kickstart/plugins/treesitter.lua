@@ -61,7 +61,7 @@ vim.keymap.set(
   ']o',
   function() require('nvim-treesitter-textobjects.move').goto_next_start({ '@loop.inner', '@loop.outer' }, 'textobjects') end
 )
-vim.keymap.set({ 'n', 'x', 'o' }, ']s', function() require('nvim-treesitter-textobjects.move').goto_next_start('@local.scope', 'locals') end)
+vim.keymap.set({ 'n', 'x', 'o' }, ']s', function() require('nvim-treesitter-textobjects.move').goto_next_start('@local.scope', 'textobjects') end)
 vim.keymap.set({ 'n', 'x', 'o' }, ']z', function() require('nvim-treesitter-textobjects.move').goto_next_start('@fold', 'folds') end)
 vim.keymap.set({ 'n', 'x', 'o' }, ']M', function() require('nvim-treesitter-textobjects.move').goto_next_end('@function.outer', 'textobjects') end)
 vim.keymap.set({ 'n', 'x', 'o' }, '][', function() require('nvim-treesitter-textobjects.move').goto_next_end('@class.inner', 'textobjects') end)
@@ -73,8 +73,12 @@ vim.keymap.set({ 'n', 'x', 'o' }, '[]', function() require('nvim-treesitter-text
 ---@param buf integer
 ---@param language string
 local function treesitter_try_attach(buf, language)
+  -- Check if the buffer is valid (might not be after install completes)
+  if not vim.api.nvim_buf_is_valid(buf) then return end
+
   -- Check if a parser exists and load it
   if not vim.treesitter.language.add(language) then return end
+
   -- Enable syntax highlighting and other treesitter features
   vim.treesitter.start(buf, language)
 
@@ -113,4 +117,5 @@ vim.api.nvim_create_autocmd('FileType', {
     end
   end,
 })
+
 -- vim: ts=2 sts=2 sw=2 et
