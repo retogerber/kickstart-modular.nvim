@@ -20,7 +20,7 @@ iron.setup {
       },
       python = {
         command = { 'python' },
-        format = require('iron.fts.common').bracketed_paste,
+        format = require('iron.fts.common').bracketed_paste_python,
         env = {PYTHON_BASIC_REPL = "1"}, --this is needed for python3.13 and up.
       },
     },
