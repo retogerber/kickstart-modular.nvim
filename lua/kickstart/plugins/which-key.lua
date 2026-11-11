@@ -1,14 +1,7 @@
 local function gh(repo) return 'https://github.com/' .. repo end
 
 -- Useful plugin to show you pending keybinds.
-vim.pack.add { { src = gh 'folke/which-key.nvim', version = vim.version.range '3.*' } }
-if not pcall(require, 'which-key.util') then
-  vim.schedule(function()
-    vim.notify('Skipping which-key setup: local installation is outdated. Run :lua vim.pack.update() and restart Neovim.', vim.log.levels.WARN)
-  end)
-  return
-end
-
+vim.pack.add { gh 'folke/which-key.nvim' }
 require('which-key').setup {
   -- Delay between pressing a key and opening which-key (milliseconds)
   delay = 0,
