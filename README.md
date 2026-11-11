@@ -63,23 +63,32 @@ Neovim's configurations are located under the following paths, depending on your
 
 #### Recommended Step
 
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
-so that you have your own copy that you can modify, then install by cloning the
-fork to your machine using one of the commands below, depending on your OS.
+Create your own copy of this repo using GitHub's
+["Use this template"](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
+button so that you have your own copy that you can modify, then install by
+cloning your new repo to your machine using one of the commands below,
+depending on your OS.
+
+Alternatively, you can [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
+this repo if you prefer an easy upstream sync path (e.g., keeping your config
+on a separate branch and fast-forwarding `master` from upstream). See the
+[discussion in #1740](https://github.com/nvim-lua/kickstart.nvim/issues/1740)
+for the tradeoffs between the two approaches.
 
 > [!NOTE]
-> Your fork's URL will be something like this:
+> Your repo's URL will be something like this:
 > `https://github.com/<your_github_username>/kickstart-modular.nvim.git`
 
-You likely want to remove `nvim-pack-lock.json` from your fork's `.gitignore`
+You likely want to remove `nvim-pack-lock.json` from your repo's `.gitignore`
 file too - it's ignored in the kickstart repo to make maintenance easier, but
 it's recommended to track it in version control (see `:help vim.pack-lockfile`).
 
 #### Clone kickstart.nvim
 
 > [!NOTE]
-> If following the recommended step above (i.e., forking the repo), replace
-> `dam9000` with `<your_github_username>` in the commands below
+> If following the recommended step above (i.e., creating your own repo from
+> the template or fork), replace `dam9000` with `<your_github_username>`
+> in the commands below
 
 <details><summary> Linux and Mac </summary>
 
@@ -180,17 +189,17 @@ If `make` is unavailable, the plugin is skipped.
 
 Recommended: install `make` (see the chocolatey section below).
 
-If you want a CMake-only setup, customize `init.lua` in two places:
+If you want a CMake-only setup, customize these two modules:
 
-1. Include `telescope-fzf-native.nvim` when `cmake` is available:
+1. In `lua/kickstart/plugins/telescope.lua`, include `telescope-fzf-native.nvim` when `cmake` is available:
 
 ```lua
 if vim.fn.executable 'make' == 1 or vim.fn.executable 'cmake' == 1 then
-  table.insert(plugins, gh 'nvim-telescope/telescope-fzf-native.nvim')
+  table.insert(telescope_plugins, gh 'nvim-telescope/telescope-fzf-native.nvim')
 end
 ```
 
-2. In the `PackChanged` hook, use CMake when `make` is unavailable:
+2. In the `PackChanged` hook in `lua/pack.lua`, use CMake when `make` is unavailable:
 
 ```lua
 if name == 'telescope-fzf-native.nvim' then
@@ -272,6 +281,19 @@ sudo dnf install -y gcc make git ripgrep fd-find tree-sitter-cli unzip neovim
 ```
 sudo pacman -S --noconfirm --needed gcc make git ripgrep fd tree-sitter-cli unzip neovim
 ```
+</details>
+
+<details><summary>Alpine Install Steps</summary>
+
+> [!CAUTION]
+> Neovim works fine on Alpine, but some tooling appears incompatible with musl
+> (lua-language-server, etc., check `:Mason` or `:MasonLog`).
+> Quickfix Lua-LSP-Support: `:%s/lua_ls/emmylua_ls`
+
+```shell
+sudo apk add gcc make git fd ripgrep tree-sitter-cli unzip bash gzip curl musl-dev neovim-doc neovim
+```
+
 </details>
 
 ### Alternative neovim installation methods

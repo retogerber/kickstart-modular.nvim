@@ -59,21 +59,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --  For example, in C this would take you to the header.
     map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-    -- Fuzzy find all the symbols in your current document.
-    --  Symbols are things like variables, functions, types, etc.
-    map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
-    -- Fuzzy find all the symbols in your current workspace.
-    --  Similar to document symbols, except searches over your entire project.
-    map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-
-    -- Jump to the type of the word under your cursor.
-    --  Useful when you're not sure what type a variable is and you want to see
-    --  the definition of its *type*, not where it was *defined*.
-    map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
-
-    map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-
     -- The following two autocommands are used to highlight references of the
     -- word under your cursor when your cursor rests there for a little while.
     --    See `:help CursorHold` for information about when this is executed
@@ -113,66 +98,21 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- Configure hover handler with border
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts)
-  opts = opts or {}
-  opts.border = 'rounded'
-  opts.max_width = 80
-  opts.max_height = 20
-  return orig_util_open_floating_preview(contents, syntax, opts)
-end
-
--- Wrap signature help specifically
-local orig_sig_help = vim.lsp.buf.signature_help
-function vim.lsp.buf.signature_help(options)
-  options = options or {}
-  options.border = 'rounded'
-  return orig_sig_help(options)
-end
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --  See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
 local servers = {
-  air = {
-    filetypes = { 'r' },
-  },
-  r_language_server = {
-    filetypes = { 'r' },
-    settings = {
-      r = {
-        lsp = {
-          rich_documentation = true,
-        },
-      },
-    },
-  },
-  marksman = {},
-  pyright = {
-    settings = {
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = 'openFilesOnly',
-          useLibraryCodeForTypes = true,
-          typeCheckingMode = 'basic', -- or 'strict'
-        },
-      },
-    },
-  },
-  ruff = {},
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
+  -- tsc = {},
+  --
+  -- Some languages (like rust) have entire language plugins that can be useful:
+  --    https://github.com/mrcjkb/rustaceanvim
+  --
+  -- But for many setups, the LSP (`rust_analyzer`) will work just fine
   -- rust_analyzer = {},
-  --
-  -- Some languages (like typescript) have entire language plugins that can be useful:
-  --    https://github.com/pmizio/typescript-tools.nvim
-  --
-  -- But for many setups, the LSP (`ts_ls`) will work just fine
-  -- ts_ls = {},
 
   stylua = {}, -- Used to format Lua code
 
@@ -186,7 +126,8 @@ local servers = {
         if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
       end
 
-      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+      local current_settings = client.config.settings --[[@as lspconfig.settings.lua_ls]]
+      client.config.settings.Lua = vim.tbl_deep_extend('force', current_settings.Lua, {
         runtime = {
           version = 'LuaJIT',
           path = { 'lua/?.lua', 'lua/?/init.lua' },
@@ -195,10 +136,7 @@ local servers = {
           checkThirdParty = false,
           -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
           --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-          library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-            '${3rd}/luv/library',
-            '${3rd}/busted/library',
-          }),
+          library = vim.api.nvim_get_runtime_file('', true),
         },
       })
     end,
@@ -221,6 +159,11 @@ vim.pack.add {
 -- Automatically install LSPs and related tools to stdpath for Neovim
 require('mason').setup {}
 
+-- Translates between nvim-lspconfig server names and mason.nvim package names (e.g. lua_ls <-> lua-language-server)
+require('mason-lspconfig').setup {
+  automatic_enable = false, -- Change this to true if you want to automatically enable servers that are installed manually (e.g. via :Mason / :MasonInstall)
+}
+
 -- Ensure the servers and tools above are installed
 --
 -- To check the current status of installed tools and/or manually install
@@ -230,7 +173,7 @@ require('mason').setup {}
 -- You can press `g?` for help in this menu.
 local ensure_installed = vim.tbl_keys(servers or {})
 vim.list_extend(ensure_installed, {
-  'stylua', -- Lua formatter; not an LSP, installed via Mason only
+  -- You can add other tools here that you want Mason to install
 })
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }

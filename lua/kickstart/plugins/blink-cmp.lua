@@ -10,18 +10,12 @@ require('luasnip').setup {}
 -- `friendly-snippets` contains a variety of premade snippets.
 --    See the README about individual language/framework/plugin snippets:
 --    https://github.com/rafamadriz/friendly-snippets
-vim.pack.add { gh 'rafamadriz/friendly-snippets' }
-require('luasnip.loaders.from_vscode').lazy_load()
+--
+-- vim.pack.add { gh 'rafamadriz/friendly-snippets' }
+-- require('luasnip.loaders.from_vscode').lazy_load()
 
 -- [[ Autocomplete Engine ]]
 vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
-if not pcall(require, 'blink.cmp.fuzzy') then
-  vim.schedule(function()
-    vim.notify('Skipping blink.cmp setup: local installation is outdated. Run :lua vim.pack.update() and restart Neovim.', vim.log.levels.WARN)
-  end)
-  return
-end
-
 require('blink.cmp').setup {
   keymap = {
     -- 'default' (recommended) for mappings similar to built-in completions
@@ -64,7 +58,7 @@ require('blink.cmp').setup {
   },
 
   sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lsp', 'path', 'snippets' },
   },
 
   snippets = { preset = 'luasnip' },
@@ -76,15 +70,10 @@ require('blink.cmp').setup {
   -- the rust implementation via `'prefer_rust_with_warning'`
   --
   -- See `:help blink-cmp-config-fuzzy` for more information
-  fuzzy = { implementation = 'prefer_rust_with_warning' },
+  fuzzy = { implementation = 'lua' },
 
   -- Shows a signature help window while you type arguments for a function
-  signature = {
-    enabled = true,
-    window = {
-      border = 'single',
-    },
-  },
+  signature = { enabled = true },
 }
 
 -- vim: ts=2 sts=2 sw=2 et
