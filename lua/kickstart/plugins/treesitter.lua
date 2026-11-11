@@ -6,11 +6,69 @@ local function gh(repo) return 'https://github.com/' .. repo end
 --  See `:help nvim-treesitter-intro`
 
 -- NOTE: You can also specify a branch or a specific commit
-vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
+vim.pack.add {
+  { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' },
+  { src = gh 'nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
+}
+
+-- Disable entire built-in ftplugin mappings to avoid conflicts.
+-- See https://neovim.io/doc/user/filetype.html#ftplugin-overrule
+vim.g.no_plugin_maps = true
 
 -- Ensure basic parsers are installed
-local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+local parsers = {
+  'r',
+  'python',
+  'markdown',
+  'markdown_inline',
+  'julia',
+  'bash',
+  'yaml',
+  'lua',
+  'luadoc',
+  'vim',
+  'query',
+  'vimdoc',
+  'latex',
+  'html',
+  'css',
+  'dot',
+  'javascript',
+  'mermaid',
+  'norg',
+  'typescript',
+  'c',
+  'diff',
+}
 require('nvim-treesitter').install(parsers)
+
+require('nvim-treesitter-textobjects').setup {
+  select = {
+    lookahead = true,
+  },
+}
+
+vim.keymap.set({ 'x', 'o' }, 'am', function() require('nvim-treesitter-textobjects.select').select_textobject('@function.outer', 'textobjects') end)
+vim.keymap.set({ 'x', 'o' }, 'im', function() require('nvim-treesitter-textobjects.select').select_textobject('@function.inner', 'textobjects') end)
+vim.keymap.set({ 'x', 'o' }, 'ac', function() require('nvim-treesitter-textobjects.select').select_textobject('@class.outer', 'textobjects') end)
+vim.keymap.set({ 'x', 'o' }, 'ic', function() require('nvim-treesitter-textobjects.select').select_textobject('@class.inner', 'textobjects') end)
+vim.keymap.set({ 'x', 'o' }, 'as', function() require('nvim-treesitter-textobjects.select').select_textobject('@local.scope', 'locals') end)
+
+vim.keymap.set({ 'n', 'x', 'o' }, ']m', function() require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, ']]', function() require('nvim-treesitter-textobjects.move').goto_next_start('@class.inner', 'textobjects') end)
+vim.keymap.set(
+  { 'n', 'x', 'o' },
+  ']o',
+  function() require('nvim-treesitter-textobjects.move').goto_next_start({ '@loop.inner', '@loop.outer' }, 'textobjects') end
+)
+vim.keymap.set({ 'n', 'x', 'o' }, ']s', function() require('nvim-treesitter-textobjects.move').goto_next_start('@local.scope', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, ']z', function() require('nvim-treesitter-textobjects.move').goto_next_start('@fold', 'folds') end)
+vim.keymap.set({ 'n', 'x', 'o' }, ']M', function() require('nvim-treesitter-textobjects.move').goto_next_end('@function.outer', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, '][', function() require('nvim-treesitter-textobjects.move').goto_next_end('@class.inner', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, '[m', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, '[[', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@class.inner', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, '[M', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@function.outer', 'textobjects') end)
+vim.keymap.set({ 'n', 'x', 'o' }, '[]', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@class.inner', 'textobjects') end)
 
 ---@param buf integer
 ---@param language string
