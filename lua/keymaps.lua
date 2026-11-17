@@ -161,6 +161,48 @@ local function new_terminal_ipython() new_terminal 'ipython --no-confirm-exit --
 
 local function new_terminal_shell() new_terminal '$SHELL' end
 
+local function open_snakefile()
+  local cwd = vim.fn.getcwd()
+  local repo_root = vim.fs.root(cwd, '.git')
+  local candidates = { vim.fs.joinpath(cwd, 'Snakefile') }
+
+  if repo_root and repo_root ~= cwd then
+    table.insert(candidates, vim.fs.joinpath(repo_root, 'Snakefile'))
+  end
+
+  for _, path in ipairs(candidates) do
+    if vim.fn.filereadable(path) == 1 then
+      vim.cmd('tabedit ' .. vim.fn.fnameescape(path))
+      return true
+    end
+  end
+
+  vim.notify('Snakefile not found in the current directory or Git repository root', vim.log.levels.WARN)
+end
+
+
+
+local function find_current_file_in_snakefile()
+  local basename = vim.fn.expand '%:t'
+  if basename == '' then
+    vim.notify('Current buffer has no filename', vim.log.levels.WARN)
+    return
+  end
+
+  if not open_snakefile() then return end
+
+  for index, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+    local column = line:find(basename, 1, true)
+    if column then
+      vim.api.nvim_win_set_cursor(0, { index, column - 1 })
+      return
+    end
+  end
+
+  vim.notify('Filename not found in Snakefile: ' .. basename, vim.log.levels.WARN)
+end
+
+
 local function get_otter_symbols_lang()
   local otterkeeper = require 'otter.keeper'
   local main_nr = vim.api.nvim_get_current_buf()
@@ -189,6 +231,8 @@ wk.add({
     { '<leader>cn', new_terminal_shell, desc = '[n]ew terminal with shell' },
     { '<leader>cp', new_terminal_python, desc = 'new [p]ython terminal' },
     { '<leader>cr', new_terminal_r, desc = 'new [R] terminal' },
+    { '<leader>cs', open_snakefile,  desc = 'open [S]nakefile in new tab' },
+    { '<leader>cf', find_current_file_in_snakefile, desc = '[F]ind current file in Snakefile' },
     { '<leader>h', group = '[h]elp / [h]ide / debug' },
     { '<leader>hc', group = '[c]onceal' },
     { '<leader>ht', group = '[t]reesitter' },
