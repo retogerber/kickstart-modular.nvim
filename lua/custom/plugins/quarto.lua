@@ -36,7 +36,9 @@ require('quarto').setup {
   codeRunner = {
     enabled = true,
     default_method = 'iron',
-    ft_runners = {},
+    ft_runners = {
+      r = function(cell) require('custom.r_send').lines(cell.text) end,
+    },
     never_run = { 'yaml' },
   },
 }
@@ -44,7 +46,10 @@ require('quarto').setup {
 local quarto = require 'quarto'
 local runner = require 'quarto.runner'
 
-vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, { silent = true, noremap = true, desc = '[q]uarto[p]review' })
+vim.keymap.set('n', '<leader>qp', function()
+  local args = vim.env.SSH_CONNECTION and '--host 127.0.0.1 --port 4200 --no-browser' or ''
+  quarto.quartoPreview { args = args }
+end, { silent = true, noremap = true, desc = '[q]uarto[p]review' })
 vim.keymap.set('n', '<localleader>rc', runner.run_cell, { desc = 'run cell', silent = true })
 vim.keymap.set('n', '<localleader>rA', runner.run_all, { desc = 'run all cells', silent = true })
 vim.keymap.set('v', '<localleader>R', runner.run_range, { desc = 'run visual range', silent = true })

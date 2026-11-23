@@ -12,12 +12,6 @@ iron.setup {
     scratch_repl = true,
     close_window_on_exit = true,
     repl_definition = {
-      R = {
-        command = { 'R', '--no-save', '--quiet' },
-      },
-      r = {
-        command = { 'R', '--no-save', '--quiet' },
-      },
       python = {
         command = { 'python' },
         format = require('iron.fts.common').bracketed_paste_python,
@@ -60,7 +54,11 @@ end
 local function send_selection()
   local data = iron.mark_visual()
   local lang = get_ft()
-  iron.send(lang, data)
+  if lang == 'r' or lang == 'R' then
+    require('custom.r_send').lines(data)
+  else
+    iron.send(lang, data)
+  end
 end
 
 local function send_line()
@@ -69,12 +67,18 @@ local function send_line()
   local cur_line = vim.api.nvim_buf_get_lines(0, linenr, linenr + 1, 0)[1]
   local width = vim.fn.strwidth(cur_line)
   if width == 0 then return end
-  iron.send(lang, cur_line)
+  if lang == 'r' or lang == 'R' then
+    require('r.send').cmd(cur_line)
+  else
+    iron.send(lang, cur_line)
+  end
 end
 
 local function focus_repl()
   local lang = get_ft()
-  if lang == 'iron' then
+  if lang == 'r' or lang == 'R' then
+    vim.notify('Use <localleader>Rs to start or reopen the R console.')
+  elseif lang == 'iron' then
     return
   else
     return iron.focus_on(lang)
@@ -83,7 +87,9 @@ end
 
 local function hide_repl()
   local lang = get_ft()
-  if lang == 'iron' then
+  if lang == 'r' or lang == 'R' then
+    vim.notify('Close the R console window to hide it; <localleader>Rs reopens it.')
+  elseif lang == 'iron' then
     return
   else
     return iron.hide_repl(lang)
@@ -92,7 +98,9 @@ end
 
 local function toggle_repl()
   local lang = get_ft()
-  if lang == 'iron' then
+  if lang == 'r' or lang == 'R' then
+    vim.notify('Use <localleader>Rs to start or reopen the R console.')
+  elseif lang == 'iron' then
     return
   else
     return iron.repl_for(lang)

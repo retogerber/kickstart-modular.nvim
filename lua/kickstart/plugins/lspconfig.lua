@@ -141,6 +141,10 @@ local servers = {
   -- },
   r_language_server = {
     filetypes = { 'r' },
+    on_init = function(client)
+      -- R.nvim provides completions from the running R session.
+      client.server_capabilities.completionProvider = nil
+    end,
     flags = {
       debounce_text_changes = 300, -- Wait 300ms after typing stops before sending didChange
     },
