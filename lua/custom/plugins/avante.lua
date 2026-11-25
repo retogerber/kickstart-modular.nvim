@@ -30,7 +30,7 @@ require('avante').setup {
       timeout = 600000,
     },
   },
-  -- Set to true while debugging; requests/responses are kept on disk (see :messages / :AvanteShowLogs).
+  -- Set to true while debugging; requests and responses are kept on the filesystem.
   debug = false,
   behaviour = {
     -- Inline suggestions are experimental and off by default; keep them off so
