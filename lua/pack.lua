@@ -45,6 +45,12 @@ vim.api.nvim_create_autocmd('PackChanged', {
       return
     end
 
+    -- Compiles (or downloads prebuilt) avante libraries; needs `make`, plus `curl` and `tar` unless building from source.
+    if name == 'avante.nvim' then
+      if vim.fn.executable 'make' == 1 then run_build(name, { 'make' }, ev.data.path) end
+      return
+    end
+
     if name == 'LuaSnip' then
       if vim.fn.has 'win32' ~= 1 and vim.fn.executable 'make' == 1 then run_build(name, { 'make', 'install_jsregexp' }, ev.data.path) end
       return
