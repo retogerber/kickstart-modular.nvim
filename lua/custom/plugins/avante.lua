@@ -26,8 +26,12 @@ require('avante').setup {
     ollama = {
       endpoint = 'http://127.0.0.1:11434', -- no /v1 suffix
       model = 'qwen3.8:27b',
+      -- Large tool calls (write_to_file sends the whole file) are slow on a 27b model over a tunnel.
+      timeout = 600000,
     },
   },
+  -- Set to true while debugging; requests/responses are kept on disk (see :messages / :AvanteShowLogs).
+  debug = false,
   behaviour = {
     -- Inline suggestions are experimental and off by default; keep them off so
     -- avante never claims <M-l>/<M-]>/<M-[>/<C-]>.
