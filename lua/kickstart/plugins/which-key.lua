@@ -8,6 +8,7 @@ require('which-key').setup {
   icons = { mappings = vim.g.have_nerd_font },
   -- Document existing key chains
   spec = {
+    { '<leader>a', group = '[A]vante AI', mode = { 'n', 'v' } },
     { '<leader>c', group = '[C]ode/[C]ell/[C]hunk' },
     { '<leader>i', group = '[I]nsert' },
     { '<leader>r', group = '[R]un' },

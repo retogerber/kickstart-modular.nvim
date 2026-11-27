@@ -21,7 +21,6 @@ local parsers = {
   'python',
   'markdown',
   'markdown_inline',
-  'julia',
   'bash',
   'yaml',
   'lua',
@@ -31,13 +30,6 @@ local parsers = {
   'vimdoc',
   'latex',
   'html',
-  'css',
-  'dot',
-  'javascript',
-  'mermaid',
-  -- 'norg',
-  'typescript',
-  'c',
   'diff',
 }
 require('nvim-treesitter').install(parsers)

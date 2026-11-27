@@ -15,6 +15,8 @@ require('luasnip').setup {}
 -- require('luasnip.loaders.from_vscode').lazy_load()
 
 -- [[ Autocomplete Engine ]]
+-- blink-cmp-avante provides @mention, /command and #shortcut completion in avante.nvim's input buffer.
+vim.pack.add { gh 'Kaiser-Yang/blink-cmp-avante' }
 vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
 require('blink.cmp').setup {
   keymap = {
@@ -59,6 +61,10 @@ require('blink.cmp').setup {
 
   sources = {
     default = { 'lsp', 'path', 'snippets' },
+    per_filetype = { AvanteInput = { 'avante', 'path' } },
+    providers = {
+      avante = { module = 'blink-cmp-avante', name = 'Avante' },
+    },
   },
 
   snippets = { preset = 'luasnip' },
