@@ -9,7 +9,8 @@ vim.pack.add {
   gh 'ColinKennedy/mega.logging',
   gh 'ColinKennedy/mega.cmdparse',
   gh 'HakonHarnes/img-clip.nvim',
-  { src = gh 'avante-corp/avante.nvim', version = 'v0.5.0' },
+  -- { src = gh 'avante-corp/avante.nvim', version = 'v0.5.0' },
+  { src = gh 'avante-corp/avante.nvim', version = 'main' },
 }
 
 require('img-clip').setup {
@@ -21,18 +22,41 @@ require('img-clip').setup {
 }
 
 require('avante').setup {
-  provider = 'ollama',
+  provider = 'openwebui',
   providers = {
+    openwebui = {
+      __inherited_from = 'openai',
+      endpoint = 'http://127.0.0.1:11435/api',
+      api_key_name = 'OPENWEBUI_API_KEY',
+      model = 'qwen3.8:27b',
+      timeout = 600000,
+      use_response_api = false,
+      num_ctx = 262144,
+      use_ReAct_prompt = true,
+      disable_tools = false,
+      extra_request_body = {
+        stream = true,
+        files = {{type = "collection", id = "3d019716-aa20-4fdf-8f7e-d43c2869389b"}},
+      },
+    },
     ollama = {
       endpoint = 'http://127.0.0.1:11434', -- no /v1 suffix
       model = 'qwen3.8:27b',
-      -- Large tool calls (write_to_file sends the whole file) are slow on a 27b model over a tunnel.
       timeout = 600000,
+      is_env_set = require('avante.providers.ollama').check_endpoint_alive,
+      disable_tools = false,
+      num_ctx = 262144,
+      use_ReAct_prompt = true,
+      extra_request_body = {
+        stream = true
+      },
     },
   },
   -- Set to true while debugging; requests and responses are kept on the filesystem.
   debug = false,
+  -- mode = "legacy", -- suggest edits as diffs to review; no automatic tool execution
   behaviour = {
+    auto_apply_diff_after_generation = false,
     -- Inline suggestions are experimental and off by default; keep them off so
     -- avante never claims <M-l>/<M-]>/<M-[>/<C-]>.
     auto_suggestions = false,
@@ -42,6 +66,7 @@ require('avante').setup {
     -- avante waits for a manual confirmation and appears stuck.
     auto_approve_tool_permissions = {
       'glob',
+      'attempt_completion',
       'git_diff',
       'git_commit',
       'ls',
@@ -50,20 +75,20 @@ require('avante').setup {
       'read_todos',
       'write_todos',
       'read_file_toplevel_symbols',
-      'str_replace',
+      -- 'str_replace',
       'view',
-      'write_to_file',
-      'insert',
+      -- 'write_to_file',
+      -- 'insert',
       'undo_edit',
       'move_path',
-      'copy_path',
-      'create_dir',
+      -- 'copy_path',
+      -- 'create_dir',
       'think',
       'get_diagnostics',
-      'edit_file',
+      -- 'edit_file',
       'read_definitions',
-      'replace_in_file',
-      'create',
+      -- 'replace_in_file',
+      -- 'create',
     },
     use_cwd_as_project_root = true,
   },
@@ -75,7 +100,6 @@ require('avante').setup {
     'write_global_file',
     'delete_path',
     'bash',
-    'attempt_completion',
     'web_search_tavily',
     'fetch',
   },
